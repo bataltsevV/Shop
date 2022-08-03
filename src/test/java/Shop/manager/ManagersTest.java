@@ -1,5 +1,7 @@
 package Shop.manager;
 
+import Shop.negativeExceptions.DuplicateException;
+import Shop.negativeExceptions.NotFoundException;
 import Shop.shopsProducts.Product;
 import Shop.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
@@ -23,12 +25,20 @@ public class ManagersTest {
     }
 
     @Test
+    public void testAddNotUniqueId() {
+        Assertions.assertThrows(DuplicateException.class, () -> {
+            manager.add(product2);
+        });
+    }
+
+    @Test
     public void testGetProduct() {
         Product[] expected = {product1, product2, product3};
         Product[] actual = manager.getProducts();
         Assertions.assertArrayEquals(expected, actual);
     }
 
+    //ДЗ - Исключительные ситуации и их обработка:
     @Test
     public void testDeleteProduct() {
         manager.deleteById(2);
@@ -39,24 +49,30 @@ public class ManagersTest {
 
     @Test
     public void testNotIdForDeleteProduct() {
-        manager.deleteById(10);
-        Product[] expected = {product1, product2, product3};
-        Product[] actual = manager.getProducts();
+        Assertions.assertThrows(NotFoundException.class, () -> {
+                    manager.deleteById(10);
+                });
+    }
+
+    @Test
+    public void testSearchByName() {
+        Product[] expected = {product1};
+        Product[] actual = manager.searchByName("Rick");
+        Assertions.assertArrayEquals(expected, actual);
+    }
+    @Test
+    public void testSetSearchByName() {
+        Product product4 = new Product(4, "Rick and Morty", 30);
+        manager.add(product4);
+        Product[] expected = {product1, product4};
+        Product[] actual = manager.searchByName("Rick");
         Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
-    public void testSearchBy() {
-        Product[] expected = {product1};
-        Product[] actual = manager.searchBy("Rick");
-        Assertions.assertArrayEquals(expected, actual);
-    }
-    @Test
-    public void testSetSearchBy() {
-        Product product4 = new Product(4, "Rick and Morty", 30);
-        manager.add(product4);
-        Product[] expected = {product1, product4};
-        Product[] actual = manager.searchBy("Rick");
-        Assertions.assertArrayEquals(expected, actual);
+    public void testSearchById() {
+        Product expected = product1;
+        Product actual = manager.searchById(1);
+        Assertions.assertEquals(expected, actual);
     }
 }

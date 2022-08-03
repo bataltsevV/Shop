@@ -21,20 +21,15 @@ public class ProductRepository {
     public void deleteById(int id) {
         Product[] tmp = new Product[products.length];
         int copyIndex = 0;
-        boolean wasDeleted = false;
         for(Product product: products) {
             if (id != product.getId()) {
                 tmp[copyIndex] = product;
                 copyIndex = copyIndex + 1;
-            } else {
-                wasDeleted = true;
             }
         }
-        if (wasDeleted == true) {
-            products = new Product[copyIndex];
-            for(int i=0; i < copyIndex; i++) {
-                products[i] = tmp[i];
-            }
+        products = new Product[copyIndex];
+        for(int i=0; i < copyIndex; i++) {
+            products[i] = tmp[i];
         }
     }
 }
