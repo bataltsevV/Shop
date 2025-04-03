@@ -62,7 +62,7 @@ public class ManagersTest {
     }
     @Test
     public void testSetSearchByName() {
-        Product product4 = new Product(4, "Rick and Morty", 30);
+        Product product4 = new Product(6, "Rock and Morty", 34);
         manager.add(product4);
         Product[] expected = {product1, product4};
         Product[] actual = manager.searchByName("Rick");
